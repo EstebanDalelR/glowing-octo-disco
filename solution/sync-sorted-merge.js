@@ -32,5 +32,5 @@ module.exports = (logSources, printer) => {
   }
   printer.done();
 
-  return console.log("Sync sort complete.");
+  return console.log("Sync sort complete from", logSources.length, "sources");
 };
