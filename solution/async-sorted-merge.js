@@ -3,7 +3,7 @@
 // Print all entries, across all of the *async* sources, in chronological order.
 
 module.exports = (logSources, printer) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     // As this is an async world, I cannot assume anything
     // each logSource contains a promise that resolves with a log entry, or false if the logSource has ended
     // I keep a print queue
