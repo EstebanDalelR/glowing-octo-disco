@@ -20,6 +20,7 @@ module.exports = (logSources, printer) => {
 
   // Add the log entry to the queue in the correct order
   const addToQueue = (sourceIndex, log) => {
+    // We need to keep the source index to pop the next log entry
     const logEntry = { sourceIndex, log };
     if (queue.length === 0) {
       queue.push(logEntry);
@@ -32,6 +33,29 @@ module.exports = (logSources, printer) => {
         queue.splice(insertIndex, 0, logEntry);
       }
     }
+  };
+
+  // A way to initialize all the sources
+  const initializeQueue = async () => {
+    for (let i = 0; i < logSources.length; i++) {
+      const log = await popNext(i);
+      if (log) {
+        addToQueue(i, log);
+      }
+    }
+  };
+  // Print the logs in the queue
+  const printQueue = async () => {
+    while (queue.length > 0) {
+      const logToPrint = queue.shift();
+      printer.print(logToPrint.log);
+      const nextLog = await popNext(logToPrint.sourceIndex);
+      if (nextLog) {
+        addToQueue(logToPrint.sourceIndex, nextLog);
+      }
+    }
+    printer.done();
+    resolve();
   };
 
   return new Promise((resolve, reject) => {
