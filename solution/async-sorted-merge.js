@@ -59,6 +59,7 @@ module.exports = (logSources, printer) => {
       resolve();
     };
 
-    resolve(console.log("Async sort complete."));
+    await initializeQueue();
+    await printQueue();
   });
 };
